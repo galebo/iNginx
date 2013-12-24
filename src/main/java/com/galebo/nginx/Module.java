@@ -1,10 +1,15 @@
 package com.galebo.nginx;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.galebo.nginx.Module.Parameter.TYPE;
 
 public class Module {
 	String name;
 	List<Parameter> parameters;
+	List<Parameter> arrayParameters=new ArrayList<Module.Parameter>();
+	
 	public String getName() {
 		return name;
 	}
@@ -16,6 +21,15 @@ public class Module {
 	}
 	public void setParameters(List<Parameter> parameters) {
 		this.parameters = parameters;
+		for (Parameter parameter : parameters) {
+			if(parameter.getType()==TYPE.ngx_array_t)
+			{
+				arrayParameters.add(parameter);
+			}
+		}
+	}
+	public List<Parameter> getArrayParameters() {
+		return arrayParameters;
 	}
 	static public class Parameter{
 		TYPE type;

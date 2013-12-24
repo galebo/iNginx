@@ -27,14 +27,14 @@ public class Create {
 		parameters.add(new Parameter(Module.Parameter.TYPE.ngx_flag_t, "concat_ignore_file_error", "ignore_file_error"));
 		parameters.add(new Parameter(Module.Parameter.TYPE.ngx_array_t, "concat_types", "types"));
 		module.setParameters(parameters);
-		FileUtils.writeStringToFile(new File("E:/workspace/git/tengine/src/http/modules/ngx_http_"+module.getName()+"_module1.c"), genFtlResult("module.ftl", module));
+		FileUtils.writeStringToFile(new File("E:/workspace/git/tengine/src/http/modules/ngx_http_"+module.getName()+"_module1.c"), genFtlResult("module_handle.ftl", module));
 	}
 	
 	static  String genFtlResult(String ftlName, Object inputInfo) {
 		try {
 			Configuration freemarkerCfg = new Configuration();
 			freemarkerCfg.setDirectoryForTemplateLoading(new File("ftl"));
-			freemarkerCfg.setEncoding(Locale.getDefault(), "GBK");
+			freemarkerCfg.setEncoding(Locale.getDefault(), "UTF-8");
 			Locale.setDefault(Locale.ENGLISH);
 	
 			Template template = freemarkerCfg.getTemplate(ftlName);
