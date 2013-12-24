@@ -1,12 +1,31 @@
-<#macro addSpace len><#list 1..len as one> </#list></#macro>
-<#macro print str width>${str}<#list 1..(width-str?length) as one> </#list></#macro>
+<#macro addSpace len>
+	<#compress>
+		<#list 1..len as one> </#list>
+	</#compress>
+</#macro>
 
+<#macro print str width>
+	<#compress>
+		${str}<#list 1..(width-str?length) as one> </#list>
+	</#compress>
+</#macro>
+
+
+<#macro getTake parameter>
+	<#compress>
+	<#if     parameter.typeName = 'ngx_flag_t' >NGX_CONF_FLAG
+	<#elseif parameter.typeName = 'ngx_str_t'  >NGX_CONF_TAKE1
+	<#elseif parameter.typeName = 'ngx_uint_t' >NGX_CONF_TAKE1
+	<#elseif parameter.typeName = 'ngx_array_t'>NGX_CONF_1MORE
+	</#if>
+	</#compress>
+</#macro>
 
 
 <#macro define module filter="_filter">
 <#assign len1=10-module.name?length-filter?length/>
 <#assign len=10-module.name?length/>
-<#assign paraLen=20/>
+<#assign pLen=20/>
 
 #include <ngx_config.h>
 #include <ngx_core.h>
@@ -24,7 +43,14 @@ typedef struct {
 	<#lt></#list>
 } ngx_http_${module.name}_loc_conf_t;
 
-
+<#list module.arrayParameters as one>
+static ngx_str_t  ngx_http_${module.name}_default_${one.name}[] = {
+<#list one.defaultValue2 as one1>
+    ngx_string("${one1}"),
+</#list>
+    ngx_null_string
+};
+</#list>
 
 
 static void *ngx_http_${module.name}_create_loc_conf(ngx_conf_t *cf);
@@ -33,13 +59,14 @@ static ngx_int_t ngx_http_${module.name}${filter}_init(ngx_conf_t *cf);
 
 
 static ngx_command_t  ngx_http_${module.name}${filter}_commands[] = {
+
     <#list module.parameters as one>
     { ngx_string("${one.direct}"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|<@getTake parameter=one/>,
       ${one.slot},
       NGX_HTTP_LOC_CONF_OFFSET,
       offsetof(ngx_http_concat_loc_conf_t, ${one.name}<#if one.typeName = 'ngx_array_t'>_keys</#if>),
-      NULL },
+      <#if one.typeName = 'ngx_array_t'>&ngx_http_${module.name}_default_${one.name}[0]<#else>NULL</#if> },
       
 	</#list>
       ngx_null_command
@@ -78,15 +105,8 @@ ngx_module_t  ngx_http_${module.name}${filter}_module = {
 </#macro>
 
 
-<#macro getTake parameter>
-	<#compress>
-	<#if     parameter.typeName = 'ngx_flag_t' >NGX_CONF_FLAG
-	<#elseif parameter.typeName = 'ngx_str_t'  >NGX_CONF_TAKE1
-	<#elseif parameter.typeName = 'ngx_uint_t' >NGX_CONF_TAKE1
-	<#elseif parameter.typeName = 'ngx_array_t'>NGX_CONF_1MORE
-	</#if>
-	</#compress>
-</#macro>
+
+
 
 
 <#macro conf module>
@@ -107,8 +127,8 @@ static void * ngx_http_${module.name}_create_loc_conf(ngx_conf_t *cf)
      */
     </#if>
     <#list module.parameters as one>
-<#if     one.typeName = 'ngx_flag_t'>    conf-><@print str=one.name width=paraLen /> = NGX_CONF_UNSET;
-<#elseif one.typeName = 'ngx_uint_t'>    conf-><@print str=one.name width=paraLen /> = NGX_CONF_UNSET_UINT;
+<#if     one.typeName = 'ngx_flag_t'>    conf-><@print str=one.name width=pLen /> = NGX_CONF_UNSET;
+<#elseif one.typeName = 'ngx_uint_t'>    conf-><@print str=one.name width=pLen /> = NGX_CONF_UNSET_UINT;
 </#if></#list>
     return conf;
 }
@@ -119,9 +139,9 @@ static char * ngx_http_${module.name}_merge_loc_conf(ngx_conf_t *cf, void *paren
     ngx_http_${module.name}_loc_conf_t  *prev = parent;
     ngx_http_${module.name}_loc_conf_t  *conf = child;
 <#list module.parameters as one>
-<#if     one.typeName = 'ngx_flag_t' >	ngx_conf_merge_value     (conf-><@print str=one.name width=paraLen />, prev-><@print str=one.name width=paraLen />, 0);
-<#elseif one.typeName = 'ngx_str_t'  >	ngx_conf_merge_str_value (conf-><@print str=one.name width=paraLen />, prev-><@print str=one.name width=paraLen />, "");
-<#elseif one.typeName = 'ngx_uint_t' >	ngx_conf_merge_uint_value(conf-><@print str=one.name width=paraLen />, prev-><@print str=one.name width=paraLen />, 0);
+<#if     one.typeName = 'ngx_flag_t' >	ngx_conf_merge_value     (conf-><@print str=one.name width=pLen />, prev-><@print str=one.name width=pLen />, ${one.defaultValue});
+<#elseif one.typeName = 'ngx_str_t'  >	ngx_conf_merge_str_value (conf-><@print str=one.name width=pLen />, prev-><@print str=one.name width=pLen />, "${one.defaultValue}");
+<#elseif one.typeName = 'ngx_uint_t' >	ngx_conf_merge_uint_value(conf-><@print str=one.name width=pLen />, prev-><@print str=one.name width=pLen />, ${one.defaultValue});
 <#elseif one.typeName = 'ngx_array_t'>
     if (ngx_http_merge_types(cf, &conf->${one.name}_keys, &conf->${one.name},&prev->${one.name}_keys, &prev->${one.name}, ngx_http_concat_default_types)
         != NGX_OK)

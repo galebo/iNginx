@@ -6,7 +6,7 @@
 <@base.define module=module filter=""/>
 
 
-static ngx_int_t ngx_http_concat_handler(ngx_http_request_t *req)
+static ngx_int_t ngx_http_${module.name}_handler(ngx_http_request_t *req)
 {
     return ngx_http_output_filter(req, &out);
 }

@@ -3,7 +3,6 @@ package com.galebo.nginx;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -19,14 +18,12 @@ public class Create {
 	public static void main(String[] args) throws IOException {
 		Module module=new Module();
 		module.setName("concat");
-		ArrayList<Parameter> parameters = new ArrayList<Module.Parameter>();
-		parameters.add(new Parameter(Module.Parameter.TYPE.ngx_flag_t, "concat", "enable"));
-		parameters.add(new Parameter(Module.Parameter.TYPE.ngx_uint_t, "concat_max_files", "max_files"));
-		parameters.add(new Parameter(Module.Parameter.TYPE.ngx_flag_t, "concat_unique", "unique"));
-		parameters.add(new Parameter(Module.Parameter.TYPE.ngx_str_t, "concat_delimiter", "delimiter"));
-		parameters.add(new Parameter(Module.Parameter.TYPE.ngx_flag_t, "concat_ignore_file_error", "ignore_file_error"));
-		parameters.add(new Parameter(Module.Parameter.TYPE.ngx_array_t, "concat_types", "types"));
-		module.setParameters(parameters);
+		module.addParameter(new Parameter("concat", "enable",false));
+		module.addParameter(new Parameter("concat_max_files", "max_files",10));
+		module.addParameter(new Parameter("concat_unique", "unique",true));
+		module.addParameter(new Parameter("concat_delimiter", "delimiter",""));
+		module.addParameter(new Parameter("concat_ignore_file_error", "ignore_file_error",false));
+		module.addParameter(new Parameter("concat_types", "types",new String[]{"application/x-javascript","text/css"}));
 		FileUtils.writeStringToFile(new File("E:/workspace/git/tengine/src/http/modules/ngx_http_"+module.getName()+"_module1.c"), genFtlResult("module_handle.ftl", module));
 	}
 	
