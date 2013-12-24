@@ -1,14 +1,6 @@
-<#macro addSpace len>
-	<#compress>
-		<#list 1..len as one> </#list>
-	</#compress>
-</#macro>
+<#macro addSpace len><#list 1..len as one> </#list></#macro>
 
-<#macro print str width>
-	<#compress>
-		${str}<#list 1..(width-str?length) as one> </#list>
-	</#compress>
-</#macro>
+<#macro print str width>${str}<#list 1..(width-str?length) as one> </#list></#macro>
 
 
 <#macro getTake parameter>
@@ -23,9 +15,9 @@
 
 
 <#macro define module filter="_filter">
-<#assign len1=10-module.name?length-filter?length/>
-<#assign len=10-module.name?length/>
-<#assign pLen=20/>
+<#assign len1=2/>
+<#assign len=len1+filter?length/>
+<#assign pLen=module.parameterMaxLength/>
 
 #include <ngx_config.h>
 #include <ngx_core.h>
@@ -43,6 +35,11 @@ typedef struct {
 	<#lt></#list>
 } ngx_http_${module.name}_loc_conf_t;
 
+
+static void *ngx_http_${module.name}_create_loc_conf(ngx_conf_t *cf);
+static char *ngx_http_${module.name}_merge_loc_conf(ngx_conf_t *cf,void *parent, void *child);
+static ngx_int_t ngx_http_${module.name}${filter}_init(ngx_conf_t *cf);
+
 <#list module.arrayParameters as one>
 static ngx_str_t  ngx_http_${module.name}_default_${one.name}[] = {
 <#list one.defaultValue2 as one1>
@@ -51,12 +48,6 @@ static ngx_str_t  ngx_http_${module.name}_default_${one.name}[] = {
     ngx_null_string
 };
 </#list>
-
-
-static void *ngx_http_${module.name}_create_loc_conf(ngx_conf_t *cf);
-static char *ngx_http_${module.name}_merge_loc_conf(ngx_conf_t *cf,void *parent, void *child);
-static ngx_int_t ngx_http_${module.name}${filter}_init(ngx_conf_t *cf);
-
 
 static ngx_command_t  ngx_http_${module.name}${filter}_commands[] = {
 

@@ -7,6 +7,7 @@ import com.galebo.nginx.Module.Parameter.TYPE;
 
 public class Module {
 	String name;
+	int parameterMaxLength=1;
 	ArrayList<Parameter> parameters = new ArrayList<Module.Parameter>();
 	List<Parameter> arrayParameters=new ArrayList<Module.Parameter>();
 	
@@ -19,6 +20,11 @@ public class Module {
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
+	public int getParameterMaxLength() {
+		return parameterMaxLength;
+	}
+	
+	
 	public void addParameter(Parameter parameter) {
 		if(parameter.direct==null){
 			if(parameter.name.equals("enable"))
@@ -30,6 +36,9 @@ public class Module {
 		if(parameter.type==TYPE.ngx_array_t)
 		{
 			arrayParameters.add(parameter);
+		}
+		if(parameterMaxLength<parameter.name.length()){
+			parameterMaxLength=parameter.name.length()+1;
 		}
 	}
 	public List<Parameter> getArrayParameters() {

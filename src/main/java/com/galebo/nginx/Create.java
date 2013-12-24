@@ -18,13 +18,13 @@ public class Create {
 	public static void main(String[] args) throws IOException {
 		Module module=new Module();
 		module.setName("concat");
-		module.addParameter(new Parameter("concat", "enable",false));
-		module.addParameter(new Parameter("concat_max_files", "max_files",10));
-		module.addParameter(new Parameter("concat_unique", "unique",true));
-		module.addParameter(new Parameter("concat_delimiter", "delimiter",""));
-		module.addParameter(new Parameter("concat_ignore_file_error", "ignore_file_error",false));
-		module.addParameter(new Parameter("concat_types", "types",new String[]{"application/x-javascript","text/css"}));
-		FileUtils.writeStringToFile(new File("E:/workspace/git/tengine/src/http/modules/ngx_http_"+module.getName()+"_module1.c"), genFtlResult("module_handle.ftl", module));
+		module.addParameter(new Parameter("enable",false));
+		module.addParameter(new Parameter("max_files",10));
+		module.addParameter(new Parameter("unique",true));
+		module.addParameter(new Parameter("delimiter",""));
+		module.addParameter(new Parameter("ignore_file_error",false));
+		module.addParameter(new Parameter("types",new String[]{"application/x-javascript","text/css"}));
+		FileUtils.writeStringToFile(new File("/WORK/git/tengine/src/http/modules/ngx_http_"+module.getName()+"_module1.c"), genFtlResult("module_handle.ftl", module));
 	}
 	
 	static  String genFtlResult(String ftlName, Object inputInfo) {
