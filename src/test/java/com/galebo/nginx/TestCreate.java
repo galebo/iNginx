@@ -7,15 +7,12 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 
 import com.galebo.nginx.Module.Parameter;
 
 public class TestCreate extends TestCase{
 	Create Create=new Create();
 	public void testHandle() throws IOException {
-		Logger log = Logger.getLogger(Create.class);
-		log.info("start");
 		
 		Module module = new Module("concat",false);
 		module.addParameter(new Parameter("enable", false));
@@ -27,7 +24,6 @@ public class TestCreate extends TestCase{
 
 		assertEqualsFile(Create.genFtlResult(module),"/TestCase/module.c");
 
-		log.info("end");
 	}
 	void assertEqualsFile(String actual,String fileName) throws IOException
 	{

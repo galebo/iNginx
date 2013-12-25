@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.galebo.nginx.Module.Parameter.TYPE;
+/**
+ * 
+ * @author galebo
+ * 
+ * Copyright (C) 2013 galebo E-mail(galebo@163.com) QQ(9747375)
+ */
 
 public class Module {
 	String name;
@@ -84,8 +90,16 @@ public class Module {
 				Boolean _defaultValue=(Boolean)defaultValue;
 				return (_defaultValue)?"1":"0";
 			}
-			if(defaultValue instanceof String[])
-				return "bad call";
+			if(defaultValue instanceof String[]){
+				String[] a=(String[])defaultValue;
+				StringBuilder sb=new StringBuilder();
+				for (int iFor1 = 0; iFor1 < a.length; iFor1++) {
+					if(iFor1!=0)
+						sb.append(",");
+					sb.append("\""+a[iFor1]+"\"");
+				}
+				return sb.toString();
+			}
 			return "bad value";
 		}
 		public String getName() {
