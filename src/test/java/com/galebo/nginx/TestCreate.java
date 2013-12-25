@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import com.galebo.nginx.Module.Parameter;
 
 public class TestCreate extends TestCase{
+	Create Create=new Create();
 	public void testHandle() throws IOException {
 		Logger log = Logger.getLogger(Create.class);
 		log.info("start");

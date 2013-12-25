@@ -12,10 +12,10 @@ import freemarker.template.Template;
 public class Create {
 
 
-	static String genFtlResult(Object inputInfo) {
+	String genFtlResult(Object inputInfo) {
 		try {
 			Configuration freemarkerCfg = new Configuration();
-			freemarkerCfg.setDirectoryForTemplateLoading(new File("ftl"));
+			freemarkerCfg.setDirectoryForTemplateLoading(new File(this.getClass().getResource("/ftl").getFile()));
 			freemarkerCfg.setEncoding(Locale.getDefault(), "UTF-8");
 			Locale.setDefault(Locale.ENGLISH);
 
