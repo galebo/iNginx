@@ -8,7 +8,7 @@ import com.galebo.nginx.Module.Parameter.TYPE;
 public class Module {
 	String name;
 	int parameterMaxLength=1;
-	boolean isFilter=false;
+	private boolean isFilter=false;
 	ArrayList<Parameter> parameters = new ArrayList<Module.Parameter>();
 	List<Parameter> arrayParameters=new ArrayList<Module.Parameter>();
 	
