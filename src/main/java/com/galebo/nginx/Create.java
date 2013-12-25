@@ -20,8 +20,7 @@ public class Create {
 		Logger log = Logger.getLogger(Create.class);
 		log.info("start");
 		
-		Module module = new Module();
-		module.setName("concat");
+		Module module = new Module("concat",false);
 		module.addParameter(new Parameter("enable", false));
 		module.addParameter(new Parameter("max_files", 10));
 		module.addParameter(new Parameter("unique", true));
