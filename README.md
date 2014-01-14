@@ -1,4 +1,4 @@
-iNginx
+iNginx console
 ======
 ##Introduction
 this project is helpful for quickly creating one basically nginx module file in your nginx project.you can use this file to begin your nginx coding.
